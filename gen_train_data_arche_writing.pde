@@ -4,13 +4,13 @@ PFont font;
 int fontSize = 20;
 int boxW = int(fontSize * 1.5); 
 
-String foldername = "sessions/002";
+String foldername = "sessions/003";
 
-int num_images = 10;
+int num_images = 1000;
 int img_index = 0;
 int char_index = 0; 
 
-boolean save = true;
+boolean save = false;
 
 PrintWriter output;
 
@@ -34,7 +34,7 @@ void draw() {
 }
 
 void render() {
-  fontSize = 16 + int(random(30));
+  fontSize = 12 + int(random(25));
   boxW = int(fontSize * 1.5); 
   textSize(fontSize);
   PImage bg = getBackgroundImage();
