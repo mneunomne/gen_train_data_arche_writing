@@ -1,10 +1,9 @@
-
 PFont font;
 
-int fontSize = 20;
-int boxW = int(fontSize * 1.5); 
+int fontSize;
+int boxW; 
 
-String foldername = "sessions/003";
+String foldername = "sessions/004";
 
 int num_images = 1000;
 int img_index = 0;
@@ -15,16 +14,18 @@ boolean testing = true;
 int grid_margin = 4;
 PrintWriter output;
 
-int minFontSize = 14; 
+int minFontSize = 15;
+
+float angle_variation = 20; 
 
 void setup() {
   size(600, 600);
   colorMode(HSB,  255, 255, 255);
   // set general font 
-  font = createFont("Arial",fontSize,true);
+  font = createFont("Arial",32,true);
   textFont(font);
   textAlign(CENTER, TOP);
-  frameRate(1);
+  frameRate(30);
 }
 
 void draw() {
@@ -37,6 +38,7 @@ void draw() {
 }
 
 void render() {
+  background(255);
   // create txt file
   String filename = foldername + "/image-" + String.format("%04d", img_index); 
   if (save) output = createWriter(filename + ".txt");
@@ -53,12 +55,24 @@ void render() {
   // char grid
   for (int y = boxW+grid_margin; y < height - boxW; y += boxW+grid_margin) {
     for (int x = boxW+grid_margin; x < width - boxW * 2; x += boxW+grid_margin) {
+      
+      // get random char within the close range of the current char index,
+      // so there is at least a little bit of variation in the sequencing 
+      int cur_char = min(256, max(0, char_index+int(random(10))-5)); 
+
       // text color with some variations
       color c = color(random(10),random(100),random(30), 120 + random(100));
       fill(c);
       stroke(c);
+
       // draw text
-      text(Character.toString(chars[char_index]), x, y, boxW, boxW);
+      pushMatrix();
+        translate(x + boxW/2, y + boxW/2);
+        rotate(radians(random(angle_variation)-angle_variation/2));
+        text(Character.toString(chars[cur_char]), -boxW/2, -boxW/2, boxW, boxW);
+        translate(-(x + boxW/2), -(y + boxW/2));
+      popMatrix();
+      
       
       // inner bounding box ?
       int rect_x = x + int(float(boxW - fontSize) / 2);
@@ -66,19 +80,20 @@ void render() {
 
       // debug, if its not saving, display bounding boxes 
       if (!save) {
-        stroke(char_index, 255, 255);
+        noFill();
+        stroke(cur_char, 255, 255);
         rect(x, y, boxW, boxW);
       }
 
       // make anotations on .txt file
-      pushAnnotations(char_index, rect_x, rect_y, fontSize, fontSize);
+      pushAnnotations(cur_char, rect_x, rect_y, fontSize, fontSize);
       // jump to next character
       char_index = (char_index + 1) % chars.length;
     }
   }
   
   // post-processing effects
-  noise_layer(0.15);
+  noise_layer(0.17);
   filter(BLUR, random(1)-0.4);
   
   // save

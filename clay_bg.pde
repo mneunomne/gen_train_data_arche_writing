@@ -1,4 +1,4 @@
-int bg_length = 11;
+int bg_length = 10;
 String prefix = "data/clay_bg/clay_bg-";
 String sufix = ".png";
 
