@@ -11,17 +11,20 @@ int img_index = 0;
 int char_index = 0; 
 
 boolean save = false;
-
+boolean testing = true; 
+int grid_margin = 2;
 PrintWriter output;
 
+int minFontSize = 14; 
+
 void setup() {
-  size(416, 416);
+  size(600, 600);
+  colorMode(HSB,  255, 255, 255);
   background(255);
   font = createFont("Arial",fontSize,true);
   textFont(font);
-  textSize(fontSize);
-  frameRate(30);
-  textAlign(CENTER, CENTER);
+  frameRate(1);
+  textAlign(CENTER, TOP);
 }
 
 void draw() {
@@ -34,24 +37,24 @@ void draw() {
 }
 
 void render() {
-  fontSize = 12 + int(random(25));
-  boxW = int(fontSize * 1.5); 
+  fontSize = minFontSize + int(random(25));
+  boxW = int(fontSize * 1.3); 
   textSize(fontSize);
   PImage bg = getBackgroundImage();
   
   
-  tint(230 - random(10), 255 - random(30), 255 - random(30));
+  tint(random(10), random(255), 255-random(10));
   image(bg, 0, 0, width, height);
   
   String filename = foldername + "/image-" + String.format("%04d", img_index);
   
   if (save) output = createWriter(filename + ".txt"); 
   
-  for (int y = boxW; y < height - boxW; y += boxW) {
-    for (int x = boxW; x < width - boxW * 2; x += boxW) {
+  for (int y = boxW+grid_margin; y < height - boxW; y += boxW+grid_margin) {
+    for (int x = boxW+grid_margin; x < width - boxW * 2; x += boxW+grid_margin) {
       // char_index = int(random(chars.length));
       
-      color c = color(random(50),0,0, 100 + random(100));
+      color c = color(random(10),random(100),random(30), 120 + random(100));
       fill(c);
       stroke(c);
       
@@ -62,6 +65,12 @@ void render() {
       
       int rect_x = x + int(float(boxW - fontSize) / 2);
       int rect_y = y + int(float(boxW - fontSize) / 1.5);
+
+      if (!save) {
+        stroke(char_index, 255, 255);
+        rect(x, y, boxW, boxW);
+        // rect(rect_x, rect_y, fontSize, fontSize);
+      }
       
       pushAnnotations(char_index, rect_x, rect_y, fontSize, fontSize);
       
@@ -69,9 +78,9 @@ void render() {
     }
   }
   
-  noise_layer();
+  noise_layer(0.15);
   
-  filter(BLUR, random(1)-0.2);
+  filter(BLUR, random(1)-0.4);
   
   
   if (save) {
@@ -97,8 +106,8 @@ void pushAnnotations(int index, int _x, int _y, int _w, int _h) {
 }
 
 
-void noise_layer() {
-  float opacity = random(30);
+void noise_layer(float ammount) {
+  float opacity = random(ammount * 255);
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < width; y++) {
       stroke(random(255), opacity);
