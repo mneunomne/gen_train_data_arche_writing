@@ -35,11 +35,15 @@ Sketch to automate the generation of labeled dataset of character 8bit system.
 
 ## Roboflow results
 
+![](./results.gif)
+
+Downloadable weights.
+
 ```python
 !pip install roboflow
 
 from roboflow import Roboflow
 rf = Roboflow(api_key="LU7NXB6IoZ00RkPsNpEp")
 project = rf.workspace().project("arche-writing")
-dataset = project.version(2).download("darknet")
+dataset = project.version(2).download("yolov5")
 ```
