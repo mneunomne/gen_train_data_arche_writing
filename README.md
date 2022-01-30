@@ -43,7 +43,7 @@ Downloadable weights.
 !pip install roboflow
 
 from roboflow import Roboflow
-rf = Roboflow(api_key="LU7NXB6IoZ00RkPsNpEp")
+rf = Roboflow(api_key="YOUR_API_HERE")
 project = rf.workspace().project("arche-writing")
 dataset = project.version(2).download("yolov5")
 ```
